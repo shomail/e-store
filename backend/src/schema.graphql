@@ -4,7 +4,7 @@ type User {
 }
 
 type Mutation {
-  hi: String
+  createUser(name: String!, email: String!): User
 }
 
 type Query {
