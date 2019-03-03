@@ -1,6 +1,8 @@
+import Items from '../components/Items';
+
 const Home = () => (
   <div>
-    <p>Welcome to Sick fits E-Store</p>
+    <Items />
   </div>
 );
 
