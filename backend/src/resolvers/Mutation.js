@@ -1,11 +1,17 @@
 const Mutations = {
-    createUser(parent, args, ctx, info) {
-        global.users = global.users || []
-        //create user
-        const newUser = { name: args.name, email: args.email }
-        global.users.push(newUser)
-        return newUser;
-    } 
-};
+  async createItem(parent, args, ctx, info) {
+    //TODO: check if logged in
+    const item = await ctx.db.mutation.createItem(
+      {
+        data: {
+          ...args,
+        },
+      },
+      info,
+    )
 
-module.exports = Mutations;
+    return item
+  },
+}
+
+module.exports = Mutations
