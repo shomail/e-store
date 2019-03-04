@@ -17,7 +17,7 @@ const Mutations = {
     delete updates.id
     return ctx.db.mutation.updateItem(
       {
-        data: { updates },
+        data: updates,
         where: { id: args.id },
       },
       info,
