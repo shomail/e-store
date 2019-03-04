@@ -1,8 +1,8 @@
-import CreateItem from '../components/CreateItem'
+import CreateItem from '../components/CreateItem';
 
 const Sell = () => (
   <div>
-    <CreateItem></CreateItem>
+    <CreateItem />
   </div>
 );
 
