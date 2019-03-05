@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import gql from 'graphql-tag';
 import { Query } from 'react-apollo';
+import styled from 'styled-components';
+import Head from 'next/head';
 import Error from './ErrorMessage';
 
 const SINGLE_ITEM_QUERY = gql`
@@ -14,6 +16,16 @@ const SINGLE_ITEM_QUERY = gql`
   }
 `;
 
+const SingleItemStyles = styled.div`
+  max-width: 1200px;
+  margin: 2rem auto;
+  box-shadow: ${props => props.theme.bs};
+  display: grid;
+  grid-auto-columns: 1fr;
+  grid-auto-flow: column;
+  min-height: 800px;
+`;
+
 class SingleItem extends Component {
   render() {
     const { id } = this.props;
@@ -23,7 +35,15 @@ class SingleItem extends Component {
           if (error) return <Error error={error} />;
           if (loading) return <p>Loading!</p>;
           if (!data.item) return <p>No item found for {id}!</p>;
-          return <p>Single Item Component - {id}</p>;
+          const { largeImage, title, description, price } = data.item;
+          return (
+            <SingleItemStyles>
+              <Head>
+                <title>Sick Fits | {title}</title>
+              </Head>
+              <img src={largeImage} alt={title} />
+            </SingleItemStyles>
+          );
         }}
       </Query>
     );
