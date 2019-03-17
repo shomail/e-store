@@ -263,6 +263,40 @@ const Mutations = {
       info,
     )
   },
+  async createOrder(parent, args, ctx, info) {
+    // 1. query the current user and make sure they are signed in
+    const { userId } = ctx.request
+    if (!userId) throw new Error('You must be signed in to complete this order!')
+    const user = await ctx.db.query.user(
+      { where: { id: userId } },
+      `{
+        id 
+        name 
+        email 
+        cart 
+        {
+          id 
+          quantity 
+          item 
+          {
+            title 
+            price 
+            id 
+            description 
+            image
+          }
+        }
+      }`,
+    )
+    // 2. recalculate the total for the price
+    const amount = user.cart.reduce((tally, cartItem) => tally + cartItem.item.price * cartItem.quantity, 0)
+    console.log(`charging amount: ${amount}`)
+    // 3. create the stipe charge
+    // 4. convert the cartItems to orderItems
+    // 5. create the order
+    // 6. clean up - clear the user's cart, delete cartItems
+    // 7. return the order to the client
+  },
 }
 
 module.exports = Mutations
