@@ -285,24 +285,47 @@ const Mutations = {
             id 
             description 
             image
+            largeImage
           }
         }
       }`,
     )
     // 2. recalculate the total for the price
     const amount = user.cart.reduce((tally, cartItem) => tally + cartItem.item.price * cartItem.quantity, 0)
-    console.log(`charging amount: ${amount}`)
     // 3. create the stripe charge
     const charge = await stripe.charges.create({
       amount: amount,
       currency: 'USD',
       source: args.token,
     })
-    console.log(charge)
     // 4. convert the cartItems to orderItems
+    const orderItems = user.cart.map(cartItem => {
+      const orderItem = {
+        ...cartItem.item,
+        quantity: cartItem.quantity,
+        user: { connect: { id: userId } },
+      }
+      delete orderItem.id
+      return orderItem
+    })
     // 5. create the order
+    const order = await ctx.db.mutation.createOrder({
+      data: {
+        total: charge.amount,
+        charge: charge.id,
+        items: { create: orderItems },
+        user: { connect: { id: userId } },
+      },
+    })
     // 6. clean up - clear the user's cart, delete cartItems
+    const cartItemIds = user.cart.map(cartItem => cartItem.id)
+    await ctx.db.mutation.deleteManyCartItems({
+      where: {
+        id_in: cartItemIds,
+      },
+    })
     // 7. return the order to the client
+    return order
   },
 }
 
