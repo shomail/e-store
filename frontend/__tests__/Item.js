@@ -15,6 +15,11 @@ describe('<Item />', () => {
     const wrapper = shallow(<ItemComponent item={fakeItem} />);
     const PriceTag = wrapper.find('PriceTag');
     expect(PriceTag.children().text()).toBe('$50');
-    console.log(PriceTag.text());
+    expect(wrapper.find('Title a').text()).toBe(fakeItem.title);
+    const img = wrapper.find('img');
+    expect(img.props().src).toBe(fakeItem.image);
+    expect(img.props().alt).toBe(fakeItem.title);
+
+    // console.log(PriceTag.text());
   });
 });
