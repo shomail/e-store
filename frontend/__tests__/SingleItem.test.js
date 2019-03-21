@@ -25,5 +25,11 @@ describe('<SingleItem />', () => {
       </MockedProvider>
     );
     expect(wrapper.text()).toContain('Loading!');
+    await wait();
+    wrapper.update();
+    // console.log(wrapper.debug());
+    expect(toJSON(wrapper.find('h2'))).toMatchSnapshot();
+    expect(toJSON(wrapper.find('img'))).toMatchSnapshot();
+    expect(toJSON(wrapper.find('p'))).toMatchSnapshot();
   });
 });
