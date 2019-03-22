@@ -33,4 +33,15 @@ describe('<Nav />', () => {
     // console.log(nav.debug());
     expect(toJSON(nav)).toMatchSnapshot();
   });
+  it('renders signed in user nav', async () => {
+    const wrapper = mount(
+      <MockedProvider mocks={signedInMocks}>
+        <Nav />
+      </MockedProvider>
+    );
+    await wait();
+    wrapper.update();
+    const nav = wrapper.find('[data-test="nav"]');
+    expect(toJSON(nav)).toMatchSnapshot();
+  });
 });
