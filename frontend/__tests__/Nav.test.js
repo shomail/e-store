@@ -4,7 +4,7 @@ import wait from 'waait';
 import { MockedProvider } from 'react-apollo/test-utils';
 import { CURRENT_USER_QUERY } from '../components/User';
 import Nav from '../components/Nav';
-import { fakeUser } from '../lib/testUtils';
+import { fakeUser, fakeCartItem } from '../lib/testUtils';
 
 const notSignedInMocks = [
   {
@@ -20,6 +20,20 @@ const signedInMocks = [
   },
 ];
 
+const signedInMocksWithCartItems = [
+  {
+    request: { query: CURRENT_USER_QUERY },
+    result: {
+      data: {
+        me: {
+          ...fakeUser(),
+          cart: [fakeCartItem(), fakeCartItem(), fakeCartItem()],
+        },
+      },
+    },
+  },
+];
+
 describe('<Nav />', () => {
   it('renders guest user nav', async () => {
     const wrapper = mount(
@@ -29,10 +43,10 @@ describe('<Nav />', () => {
     );
     await wait();
     wrapper.update();
-    const nav = wrapper.find('[data-test="nav"]');
-    // console.log(nav.debug());
+    const nav = wrapper.find('ul[data-test="nav"]');
     expect(toJSON(nav)).toMatchSnapshot();
   });
+
   it('renders signed in user nav', async () => {
     const wrapper = mount(
       <MockedProvider mocks={signedInMocks}>
@@ -41,7 +55,21 @@ describe('<Nav />', () => {
     );
     await wait();
     wrapper.update();
-    const nav = wrapper.find('[data-test="nav"]');
-    expect(toJSON(nav)).toMatchSnapshot();
+    const nav = wrapper.find('ul[data-test="nav"]');
+    expect(nav.children().length).toBe(6);
+    expect(nav.text()).toContain('Sign Out');
+  });
+
+  it('renders amount of items in cart', async () => {
+    const wrapper = mount(
+      <MockedProvider mocks={signedInMocksWithCartItems}>
+        <Nav />
+      </MockedProvider>
+    );
+    await wait();
+    wrapper.update();
+    const nav = wrapper.find('ul[data-test="nav"]');
+    const count = nav.find('div.count');
+    expect(toJSON(count)).toMatchSnapshot();
   });
 });
