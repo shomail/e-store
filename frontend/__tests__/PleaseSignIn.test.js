@@ -32,4 +32,20 @@ describe('<PleaseSignIn />', () => {
     expect(wrapper.text()).toContain('Please Sign in to continue');
     expect(wrapper.find('Signin').exists()).toBe(true);
   });
+
+  it('renders the child component when user is signed in', async () => {
+    const Hey = () => <p>Hey!</p>;
+    const wrapper = mount(
+      <MockedProvider mocks={signedInMocks}>
+        <PleaseSignIn>
+          <Hey />
+        </PleaseSignIn>
+      </MockedProvider>
+    );
+    await wait();
+    wrapper.update();
+    // expect(wrapper.find('Hey').exists()).toBe(true);
+    expect(wrapper.contains(<Hey />)).toBe(true);
+    console.log(wrapper.debug());
+  });
 });
