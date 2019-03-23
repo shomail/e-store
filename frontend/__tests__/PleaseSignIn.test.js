@@ -46,6 +46,6 @@ describe('<PleaseSignIn />', () => {
     wrapper.update();
     // expect(wrapper.find('Hey').exists()).toBe(true);
     expect(wrapper.contains(<Hey />)).toBe(true);
-    console.log(wrapper.debug());
+    // console.log(wrapper.debug());
   });
 });
