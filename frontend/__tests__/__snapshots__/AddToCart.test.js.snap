@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`<AddToCart />  1`] = `
+exports[`<AddToCart /> Renders and matches snapshot 1`] = `
 <button
   disabled={false}
   onClick={[Function]}
